@@ -1,7 +1,6 @@
+-- Процедура по количеству отправлений по типам за день в отделении
 
-Процедура для количества отправлений по типам за день в отделении
 DELIMITER //
-
 CREATE PROCEDURE pros1(IN office_id INT, IN target_date DATE)
 BEGIN
     DECLARE office_exists INT;
@@ -27,13 +26,12 @@ BEGIN
         END IF;
     END IF;
 END //
-
 DELIMITER ;
 
 
-Процедура с выводом списка сотрудников с количеством отправлений по типам
-DELIMITER //
+-- Список сотрудников с количеством отправлений по типам
 
+DELIMITER //
 CREATE PROCEDURE pros2()
 BEGIN
     DECLARE shipment_count INT;
@@ -58,5 +56,64 @@ BEGIN
         ORDER BY e.last_name, count DESC;
     END IF;
 END //
-
 DELIMITER ;
+
+
+-- Дата первого отправления клиента
+
+DELIMITER //
+CREATE PROCEDURE pros3(IN input_client_id INT)
+BEGIN
+    DECLARE client_exists INT;
+    DECLARE first_shipment_date DATE;
+
+    SELECT COUNT(*) INTO client_exists
+    FROM clients
+    WHERE client_id = input_client_id;
+
+    IF client_exists = 0 THEN
+        SELECT 'Ошибка: клиент не найден' AS message;
+    ELSE
+        SELECT MIN(date_sent) INTO first_shipment_date
+        FROM shipments
+        WHERE sender_id = input_client_id;
+
+        IF first_shipment_date IS NULL THEN
+            SELECT 'У клиента нет отправлений' AS message;
+        ELSE
+            SELECT first_shipment_date AS first_shipment_date;
+        END IF;
+    END IF;
+END //
+DELIMITER ;
+
+
+-- Процедура для вывода расписания работы сотрудника
+
+DELIMITER //
+CREATE PROCEDURE pros4(IN emp_id INT)
+BEGIN
+    DECLARE emp_exists INT;
+
+    SELECT COUNT(*) INTO emp_exists
+    FROM employees
+    WHERE employee_id = emp_id;
+
+    IF emp_exists = 0 THEN
+        SELECT 'Ошибка: сотрудник не найден' AS message;
+    ELSE
+        SELECT
+            day_of_week,
+            start_time,
+            end_time
+        FROM employee_schedules
+        WHERE employee_id = emp_id
+        ORDER BY FIELD(day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+
+        IF FOUND_ROWS() = 0 THEN
+            SELECT 'У сотрудника нет расписания' AS message;
+        END IF;
+    END IF;
+END //
+DELIMITER ;
+
