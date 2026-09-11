@@ -1,7 +1,7 @@
--- Процедура по количеству отправлений по типам за день в отделении
+-- Количество отправлений по типам за день в отделении
 
 DELIMITER //
-CREATE PROCEDURE pros1(IN office_id INT, IN target_date DATE)
+CREATE PROCEDURE get_daily_shipments_by_office(IN office_id INT, IN target_date DATE)
 BEGIN
     DECLARE office_exists INT;
 
@@ -32,7 +32,7 @@ DELIMITER ;
 -- Список сотрудников с количеством отправлений по типам
 
 DELIMITER //
-CREATE PROCEDURE pros2()
+CREATE PROCEDURE get_employees_shipment_stats()
 BEGIN
     DECLARE shipment_count INT;
 
@@ -62,7 +62,7 @@ DELIMITER ;
 -- Дата первого отправления клиента
 
 DELIMITER //
-CREATE PROCEDURE pros3(IN input_client_id INT)
+CREATE PROCEDURE get_client_first_shipment(IN input_client_id INT)
 BEGIN
     DECLARE client_exists INT;
     DECLARE first_shipment_date DATE;
@@ -91,7 +91,7 @@ DELIMITER ;
 -- Процедура для вывода расписания работы сотрудника
 
 DELIMITER //
-CREATE PROCEDURE pros4(IN emp_id INT)
+CREATE PROCEDURE get_employee_schedule(IN emp_id INT)
 BEGIN
     DECLARE emp_exists INT;
 
@@ -121,7 +121,7 @@ DELIMITER ;
 -- Суммарная стоимость отправлений по сотруднику
 
 DELIMITER //
-CREATE PROCEDURE pros5(IN emp_id INT)
+CREATE PROCEDURE get_employee_total_cost(IN emp_id INT)
 BEGIN
     DECLARE emp_exists INT;
     DECLARE total DECIMAL(10, 2);
@@ -150,7 +150,7 @@ DELIMITER ;
 -- Поиск сотрудника с наибольшим количеством отправлений по определенному типу
 
 DELIMITER //
-CREATE PROCEDURE pros6()
+CREATE PROCEDURE get_top_employees_by_type()
 BEGIN
     DECLARE result_count INT DEFAULT 0;
 
@@ -189,7 +189,7 @@ DELIMITER ;
 -- Среднее количество отправлений в день по регионам
 
 DELIMITER //
-CREATE PROCEDURE pros7()
+CREATE PROCEDURE get_avg_shipments_by_region()
 BEGIN
     DECLARE shipment_count INT;
 
